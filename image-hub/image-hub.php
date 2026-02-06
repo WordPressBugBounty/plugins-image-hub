@@ -3,11 +3,10 @@
  * Plugin Name:       Image Hub
  * Plugin URI:        https://wpimagehub.com
  * Description:       Access and manage royalty-free images from Unsplash, Pixabay, Pexels, Openverse & Giphy without leaving your WordPress dashboard.
- * Version:           1.0.9
+ * Version:           1.0.11
  * Author: 			  ExtendThemes
  * Author URI: 		  https://extendthemes.com
  * Text Domain:       image-hub
- * Domain Path:       /lang
  * License:           GPL-3.0+
  * License URI:       https://www.gnu.org/licenses/gpl-3.0.txt
  * Requires PHP: 	  7.4
@@ -23,8 +22,8 @@ define('IMAGE_HUB_ENTRY_FILE', __FILE__ );
 define('IMAGE_HUB_ROOT_DIR', plugin_dir_path( __FILE__ ) );
 define('IMAGE_HUB_ROOT_URL', untrailingslashit( plugin_dir_url( __FILE__ ) ) );
 define("IMAGE_HUB_SERVICE_URL", "https://api.wpimagehub.com");
-define("IMAGE_HUB_VERSION", "1.0.9");
-define("IMAGE_HUB_BUILD_NUMBER", '13' );
+define("IMAGE_HUB_VERSION", "1.0.11");
+define("IMAGE_HUB_BUILD_NUMBER", '17' );
 define("IMAGE_HUB_PLUGIN_NAME", "Image Hub");
 
 require_once plugin_dir_path( __FILE__ ) . 'vendor/autoload.php';
