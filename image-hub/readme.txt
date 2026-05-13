@@ -3,9 +3,9 @@
 Contributors: ExtendThemes
 Tags: Unsplash, Openverse, Pixabay, Pexels, giphy, Stock Photos, photos, free photos
 Requires at least: 6.5
-Tested up to: 6.9
+Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.0.11
+Stable tag: 1.1.0
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.en.html
 
@@ -52,6 +52,9 @@ By using Image Hub, you agree to our Terms of Use and Privacy Policy. We recomme
 
 
 == Changelog ==
+
+= 1.1.0 =
+- Added support for WordPress 7.0
 
 = 1.0.9 =
 - Minor bug fixes
