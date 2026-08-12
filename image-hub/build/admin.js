@@ -1784,7 +1784,7 @@ var PhotoItem = /*#__PURE__*/external_React_default().forwardRef(function (_ref8
     },
     variant: "primary",
     onClick: function onClick() {
-      window.location.href = image_hub_data.adminUrl + "upload.php?item=" + downloadedImages[photo.id];
+      window.location.href = image_hub_data.adminUrl + "upload.php";
     }
   }, (0,external_wp_i18n_namespaceObject.__)("View Image", "image-hub"))), /*#__PURE__*/external_React_default().createElement("div", {
     style: {
