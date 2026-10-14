@@ -8,6 +8,7 @@ $baseDir = dirname($vendorDir);
 return array(
     'ImageHub\\Admin' => $baseDir . '/inc/src/Admin.php',
     'ImageHub\\MediaModal' => $baseDir . '/inc/src/MediaModal.php',
+    'ImageHub\\Search' => $baseDir . '/inc/src/Search.php',
     'ImageHub\\Settings' => $baseDir . '/inc/src/Settings.php',
     'ImageHub\\Utils' => $baseDir . '/inc/src/Utils.php',
 );

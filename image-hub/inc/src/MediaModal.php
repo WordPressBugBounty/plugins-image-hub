@@ -32,7 +32,7 @@ class MediaModal
 
     public function image_hub_enqueue_media_library_scripts($id = '')
     {
-        if (is_admin()) {
+        if (is_admin() && current_user_can('upload_files')) {
             Utils::enque_image_hub_script('media-modal', false);
 
             wp_localize_script('image-hub-media-modal', 'image_hub_settings', $this->settings);
@@ -62,13 +62,21 @@ class MediaModal
 			wp_send_json_error('Nonce verification failed.');
 		}
 
+		if (!current_user_can('upload_files')) {
+			wp_send_json_error('You are not allowed to upload files.', 403);
+		}
+
         // call the callback url to notify provider that image is downloaded (unsplash terms)
         //https://help.unsplash.com/en/articles/2511258-guideline-triggering-a-download
         if (isset($_POST['downloadImageCallbackUrl']) && !empty($_POST['downloadImageCallbackUrl'])) {
             $callback_url = esc_url_raw(wp_unslash($_POST['downloadImageCallbackUrl']));
 
-            if (filter_var($callback_url, FILTER_VALIDATE_URL)) {
-                $response = wp_remote_get($callback_url);
+            // The callback always goes through the image service, so any other host is ignored.
+            $service_host = wp_parse_url(Utils::get_service_url(), PHP_URL_HOST);
+
+            if (filter_var($callback_url, FILTER_VALIDATE_URL) && $service_host && wp_parse_url($callback_url, PHP_URL_HOST) === $service_host) {
+                // A dev service can run on localhost, which wp_safe_remote_get() refuses.
+                $response = defined('IMAGE_HUB_DEV_SERVICE_URL') ? wp_remote_get($callback_url) : wp_safe_remote_get($callback_url);
                 if (is_wp_error($response)) {
                     wp_send_json_error('Failed to fetch data from callback URL. ' . $callback_url);
                 }

@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit8093978c7682a3b2b15697fb43580b0e
+class ComposerStaticInitc2dd08249b053179939eb35676cf886a
 {
     public static $prefixLengthsPsr4 = array (
         'I' => 
@@ -23,6 +23,7 @@ class ComposerStaticInit8093978c7682a3b2b15697fb43580b0e
     public static $classMap = array (
         'ImageHub\\Admin' => __DIR__ . '/../..' . '/inc/src/Admin.php',
         'ImageHub\\MediaModal' => __DIR__ . '/../..' . '/inc/src/MediaModal.php',
+        'ImageHub\\Search' => __DIR__ . '/../..' . '/inc/src/Search.php',
         'ImageHub\\Settings' => __DIR__ . '/../..' . '/inc/src/Settings.php',
         'ImageHub\\Utils' => __DIR__ . '/../..' . '/inc/src/Utils.php',
     );
@@ -30,9 +31,9 @@ class ComposerStaticInit8093978c7682a3b2b15697fb43580b0e
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit8093978c7682a3b2b15697fb43580b0e::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit8093978c7682a3b2b15697fb43580b0e::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit8093978c7682a3b2b15697fb43580b0e::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitc2dd08249b053179939eb35676cf886a::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitc2dd08249b053179939eb35676cf886a::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInitc2dd08249b053179939eb35676cf886a::$classMap;
 
         }, null, ClassLoader::class);
     }

@@ -9,6 +9,18 @@ class Settings
 
     public $settings = [];
 
+    // API key options and the header name the image service expects for each one.
+    const API_KEY_HEADERS = array(
+        'image_hub_api_keys_giphy_api_key'           => 'giphy-api-key',
+        'image_hub_api_keys_openverse_client_id'     => 'openverse-client-id',
+        'image_hub_api_keys_openverse_client_secret' => 'openverse-client-secret',
+        'image_hub_api_keys_pexels_api_key'          => 'pexels-api-key',
+        'image_hub_api_keys_pixabay_api_key'         => 'pixabay-api-key',
+        'image_hub_api_keys_unsplash_access_key'     => 'unsplash-access-key',
+    );
+
+    const PROVIDERS = array('unsplash', 'openverse', 'pixabay', 'pexels', 'giphy');
+
     public function __construct()
     {
         add_action('init', array($this, 'image_hub_register_settings'));
@@ -28,6 +40,10 @@ class Settings
             !wp_verify_nonce(sanitize_key(wp_unslash($_POST['nonce'])), 'image_hub_nonce')
         ) {
             wp_send_json_error('Nonce verification failed.');
+        }
+
+        if (!current_user_can('manage_options')) {
+            wp_send_json_error('You are not allowed to change these settings.', 403);
         }
 
         if (!isset($_POST['data'])) {
@@ -93,6 +109,48 @@ class Settings
             'image_hub_enable_media_modal'          => (bool) get_option('image_hub_enable_media_modal', true),
             'image_hub_use_default_keys'          => (bool) get_option('image_hub_use_default_keys', true),
         );
+    }
+
+    /**
+     * Settings that are safe to print in pages any media user can open.
+     * The API keys are replaced by "has a key" flags for each provider.
+     */
+    public function get_public_settings()
+    {
+        $public = array_diff_key($this->settings, self::API_KEY_HEADERS);
+
+        foreach (self::PROVIDERS as $provider) {
+            $has_key = false;
+            foreach (array_keys(self::API_KEY_HEADERS) as $option) {
+                if (strpos($option, 'image_hub_api_keys_' . $provider) === 0 && !empty($this->settings[$option])) {
+                    $has_key = true;
+                }
+            }
+            $public['image_hub_has_api_key_' . $provider] = $has_key;
+        }
+
+        return $public;
+    }
+
+    /**
+     * Headers with the site's own API keys, sent to the image service when
+     * the default keys are turned off.
+     */
+    public static function get_api_key_headers()
+    {
+        $headers = array();
+        if (get_option('image_hub_use_default_keys', true)) {
+            return $headers;
+        }
+
+        foreach (self::API_KEY_HEADERS as $option => $header) {
+            $value = get_option($option);
+            if ($value) {
+                $headers[$header] = $value;
+            }
+        }
+
+        return $headers;
     }
 	function image_hub_force_store_boolean($value)
 	{
@@ -264,7 +322,8 @@ class Settings
         Utils::enque_image_hub_script('settings', true);
         wp_enqueue_style('wp-components');
 
-        wp_localize_script('image-hub-settings', 'image_hub_settings', $this->settings);
+        // Only admins reach this page, so it gets the keys for the API keys form.
+        wp_localize_script('image-hub-settings', 'image_hub_settings', array_merge($this->get_public_settings(), $this->settings));
         Utils::localize_props('image-hub-settings');
 
         wp_set_script_translations('image-hub-settings', 'image-hub');

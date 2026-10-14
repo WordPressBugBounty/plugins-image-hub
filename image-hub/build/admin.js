@@ -717,12 +717,11 @@ var __settings = image_hub_settings;
 var getImageHubSettings = function getImageHubSettings() {
   var imageHubSettings = (0,external_React_.useMemo)(function () {
     return {
-      image_hub_api_keys_giphy_api_key: __settings.image_hub_api_keys_giphy_api_key,
-      image_hub_api_keys_openverse_client_id: __settings.image_hub_api_keys_openverse_client_id,
-      image_hub_api_keys_openverse_client_secret: __settings.image_hub_api_keys_openverse_client_secret,
-      image_hub_api_keys_pexels_api_key: __settings.image_hub_api_keys_pexels_api_key,
-      image_hub_api_keys_pixabay_api_key: __settings.image_hub_api_keys_pixabay_api_key,
-      image_hub_api_keys_unsplash_access_key: __settings.image_hub_api_keys_unsplash_access_key,
+      image_hub_has_api_key_giphy: __settings.image_hub_has_api_key_giphy === "1",
+      image_hub_has_api_key_openverse: __settings.image_hub_has_api_key_openverse === "1",
+      image_hub_has_api_key_pexels: __settings.image_hub_has_api_key_pexels === "1",
+      image_hub_has_api_key_pixabay: __settings.image_hub_has_api_key_pixabay === "1",
+      image_hub_has_api_key_unsplash: __settings.image_hub_has_api_key_unsplash === "1",
       image_hub_enable_giphy: __settings.image_hub_enable_giphy === "1",
       image_hub_enable_image_attribution: __settings.image_hub_enable_image_attribution === "1",
       image_hub_enable_media_modal: __settings.image_hub_enable_media_modal === "1",
@@ -735,6 +734,8 @@ var getImageHubSettings = function getImageHubSettings() {
       image_hub_max_image_width: parseInt(__settings.image_hub_max_image_width, 10)
     };
   }, [__settings]);
+
+  // The key values are only printed on the settings page, for admins.
   var apiKeys = (0,external_React_.useMemo)(function () {
     return {
       giphy_api_key: __settings.image_hub_api_keys_giphy_api_key,
@@ -922,7 +923,7 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
 
 
 
-var server_url = image_hub_data.server_url;
+var searchUrl = image_hub_data.searchUrl;
 var PER_PAGE = 30;
 var defaultPagination = {
   currentPage: 1,
@@ -967,8 +968,7 @@ var ImageProvider = function ImageProvider(_ref) {
     isLoading = _useState16[0],
     setIsLoading = _useState16[1];
   var _getImageHubSettings = getImageHubSettings(),
-    imageHubSettings = _getImageHubSettings.imageHubSettings,
-    apiKeys = _getImageHubSettings.apiKeys;
+    imageHubSettings = _getImageHubSettings.imageHubSettings;
   var _useState17 = (0,external_wp_element_namespaceObject.useState)(false),
     _useState18 = _slicedToArray(_useState17, 2),
     refresh = _useState18[0],
@@ -1064,25 +1064,21 @@ var ImageProvider = function ImageProvider(_ref) {
         value = _ref3[1];
       return "&".concat(key === null || key === void 0 ? void 0 : key.toLowerCase(), "=").concat(encodeURIComponent(value === null || value === void 0 ? void 0 : value.toLowerCase()));
     }).join("") : "";
-    var apiUrl = "".concat(server_url, "/?query=").concat(encodeURIComponent(query), "&page=").concat(page, "&per_page=").concat(PER_PAGE).concat(additionalParams).concat(providerParam);
-    var headers = {};
-    if (!apiKeys.image_hub_use_default_keys) {
-      Object.entries(apiKeys || {}).forEach(function (_ref4) {
-        var _ref5 = _slicedToArray(_ref4, 2),
-          key = _ref5[0],
-          value = _ref5[1];
-        if (value) {
-          var headerKey = key.replace(/_/g, "-"); // Convert underscores to hyphens
-          headers[headerKey] = value;
-        }
-      });
-    }
+    // The search goes through our REST route, which adds the API keys on the server.
+    var separator = searchUrl.includes("?") ? "&" : "?";
+    var apiUrl = "".concat(searchUrl).concat(separator, "query=").concat(encodeURIComponent(query), "&page=").concat(page, "&per_page=").concat(PER_PAGE).concat(additionalParams).concat(providerParam);
     return fetch(apiUrl, {
       method: "GET",
-      headers: headers
+      headers: {
+        "X-WP-Nonce": image_hub_data.restNonce
+      }
     }).then(function (response) {
       return response.json();
     }).then(function (data) {
+      // WordPress errors (no permission, service unreachable) have a code and no images.
+      if (data !== null && data !== void 0 && data.code && !data.images) {
+        throw new Error(data.message);
+      }
       if (reset) {
         setPagination(defaultPagination);
         setImages([]);
@@ -1535,7 +1531,7 @@ var hasCertainKey = function hasCertainKey(provider, data) {
     var _ref4 = ImageGrid_slicedToArray(_ref3, 2),
       key = _ref4[0],
       value = _ref4[1];
-    return key.startsWith("image_hub_api_keys_" + provider) && value;
+    return key === "image_hub_has_api_key_" + provider && value;
   });
 };
 var ErrorDisplay = function ErrorDisplay(_ref5) {

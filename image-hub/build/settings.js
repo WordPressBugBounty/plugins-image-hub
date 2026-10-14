@@ -241,12 +241,11 @@ var __settings = image_hub_settings;
 var getImageHubSettings = function getImageHubSettings() {
   var imageHubSettings = (0,external_React_namespaceObject.useMemo)(function () {
     return {
-      image_hub_api_keys_giphy_api_key: __settings.image_hub_api_keys_giphy_api_key,
-      image_hub_api_keys_openverse_client_id: __settings.image_hub_api_keys_openverse_client_id,
-      image_hub_api_keys_openverse_client_secret: __settings.image_hub_api_keys_openverse_client_secret,
-      image_hub_api_keys_pexels_api_key: __settings.image_hub_api_keys_pexels_api_key,
-      image_hub_api_keys_pixabay_api_key: __settings.image_hub_api_keys_pixabay_api_key,
-      image_hub_api_keys_unsplash_access_key: __settings.image_hub_api_keys_unsplash_access_key,
+      image_hub_has_api_key_giphy: __settings.image_hub_has_api_key_giphy === "1",
+      image_hub_has_api_key_openverse: __settings.image_hub_has_api_key_openverse === "1",
+      image_hub_has_api_key_pexels: __settings.image_hub_has_api_key_pexels === "1",
+      image_hub_has_api_key_pixabay: __settings.image_hub_has_api_key_pixabay === "1",
+      image_hub_has_api_key_unsplash: __settings.image_hub_has_api_key_unsplash === "1",
       image_hub_enable_giphy: __settings.image_hub_enable_giphy === "1",
       image_hub_enable_image_attribution: __settings.image_hub_enable_image_attribution === "1",
       image_hub_enable_media_modal: __settings.image_hub_enable_media_modal === "1",
@@ -259,6 +258,8 @@ var getImageHubSettings = function getImageHubSettings() {
       image_hub_max_image_width: parseInt(__settings.image_hub_max_image_width, 10)
     };
   }, [__settings]);
+
+  // The key values are only printed on the settings page, for admins.
   var apiKeys = (0,external_React_namespaceObject.useMemo)(function () {
     return {
       giphy_api_key: __settings.image_hub_api_keys_giphy_api_key,

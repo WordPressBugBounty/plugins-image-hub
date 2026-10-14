@@ -21,7 +21,8 @@ class Utils
             'pixabayLogoUrl' => IMAGE_HUB_ROOT_URL . '/assets/images/pixabay.png',
             'transparentBG' => IMAGE_HUB_ROOT_URL . '/assets/images/transparent-bg.jpg',
             'pexelsLogoUrl' => IMAGE_HUB_ROOT_URL . '/assets/images/pexels.png',
-            'server_url' => Utils::get_service_url(),
+            'searchUrl' => rest_url('image-hub/v1/search'),
+            'restNonce' => wp_create_nonce('wp_rest'),
             'version' => Utils::get_version(),
         ));
     }

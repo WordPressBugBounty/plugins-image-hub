@@ -5,7 +5,7 @@ Tags: Unsplash, Openverse, Pixabay, Pexels, giphy, Stock Photos, photos, free ph
 Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.2.0
+Stable tag: 1.3.0
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.en.html
 
@@ -52,6 +52,13 @@ By using Image Hub, you agree to our Terms of Use and Privacy Policy. We recomme
 
 
 == Changelog ==
+
+= 1.3.0 =
+- Security: API keys are no longer included in admin pages for users who can't manage Image Hub settings
+- Security: only administrators can change Image Hub settings
+- Security: downloading images now requires permission to upload files, and the download no longer calls arbitrary URLs
+- Image searches now go through your site, so your own API keys stay on the server
+- The Image Hub tab is only shown to users who can upload files
 
 = 1.2.0 =
 - Added support for WordPress 7.1
